@@ -1,1 +1,3 @@
-# KIND_R_reading_group
+# KIND Learning Network R reading group
+
+
