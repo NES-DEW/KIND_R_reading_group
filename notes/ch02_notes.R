@@ -56,7 +56,7 @@ ggplot(data = penguins, mapping = aes(x = flipper_length_mm, y = body_mass_g))
 ggplot(data = penguins, mapping = aes(x = flipper_length_mm, y = body_mass_g)) +
   geom_point()
 
-#If we want colors we need to use the American spelling of colour i.e. color and add it within the mapping brackets
+#If we want colors we add it within the mapping brackets
 ggplot(data = penguins, mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
   geom_point()
 
