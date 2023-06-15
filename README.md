@@ -1,3 +1,21 @@
+![](src/header.png)
+
 # KIND Learning Network R reading group
 
+This is the repository for the [KIND Learning
+Network](https://forms.office.com/pages/responsepage.aspx?id=veDvEDCgykuAnLXmdF5Jmn79kl25VpJIq3eErXXCYKBUMUpENjBJOENINDRFMUlYQTlCM1RVNzRSRy4u)
+reading group on Wickham, Çetinkaya-Rundel, and Grolemund’s forthcoming
+second edition of [*R for Data Science*](https://r4ds.hadley.nz/).
 
+## Schedule
+
+| Date       | Topic                                                                                                                                |
+|------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| 15/06/2023 | [Chapter 2 - visualisation](https://r4ds.hadley.nz/data-visualize.html)                                                              |
+| 29/06/2023 | Remaining parts of [Chapter 2](https://r4ds.hadley.nz/data-visualize.html), [chapter 3](https://r4ds.hadley.nz/workflow-basics.html) |
+
+## What’s here?
+
+- chapter notes as `ch0x_notes.R` in the `notes` folder
+- extracts of the code from each book chapter in the `chapter code`
+  folder
