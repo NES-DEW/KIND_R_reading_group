@@ -1,4 +1,5 @@
 #KIND Network - R Reading Group - Visualisations
+#(turn this into rmarkdown with knitr::spin("notes/ch02_notes.R"))
 
 #The R Reading Group is looking at the 2nd edition of R For Data Science: 
 #https://r4ds.hadley.nz/ 
@@ -223,5 +224,13 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
 ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
   geom_point(aes(color = species, shape = island))
 
-
-
+# Daft example with penguin unicode
+ggplot(data = penguins, mapping = aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_text(aes(color = species, label = "🐧")) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", y = "Body mass (g)",
+    color = "Species", shape = "Species") + 
+  scale_color_colorblind()
