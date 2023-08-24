@@ -1,6 +1,7 @@
 *.html
 *.pdf
 *.docx
+/figure
 /archive
 knit_list.r
 /iteration_*
