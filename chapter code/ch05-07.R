@@ -43,3 +43,27 @@ fb(99999)
 # death to setwd()
 # relative paths
 # shall we talk about here::here()?
+
+
+mtcars %>%
+  select(hp) %>%
+  summarise(`Grand total` = sum(.)) # yarp
+
+mtcars |>
+  select(hp) |>
+  summarise(`Grand total` =sum(.)) # narp
+
+mtcars |>
+  select(hp) |>
+  sum()
+
+mtcars %>%
+  lm(mpg ~ disp, data = .)
+
+mtcars |> 
+  (\(x) lm(mpg ~ disp, data = x))() 
+
+
+
+
+   
