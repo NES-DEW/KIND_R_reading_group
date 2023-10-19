@@ -3,7 +3,19 @@
 
 library(tidyverse)
 
-mpg
+mpg %>%
+  ggplot() +
+  geom_
+
+library(ggthemes)
+# 
+# p <- ggplot(mtcars) +
+#   geom_col(aes(x = wt, y = mpg, fill = factor(gear))) +
+#   facet_wrap(~am)
+# 
+# p + 
+#   theme_excel_new() + 
+#   scale_fill_excel_new()
 
 # aesthetic mappings
 
@@ -13,15 +25,19 @@ ggplot(mpg, aes(x = displ, y = hwy, color = class)) +
 
 # Right
 ggplot(mpg, aes(x = displ, y = hwy, shape = class)) +
-  geom_point()
+  geom_point() 
 
 # Left
 ggplot(mpg, aes(x = displ, y = hwy, size = class)) +
-  geom_point()
+  geom_point() 
 
 # Right
 ggplot(mpg, aes(x = displ, y = hwy, alpha = class)) +
   geom_point()
+
+diamonds |>
+  ggplot() +
+  geom_point(aes(x = carat, y=price), alpha=1/5)
 
 ggplot(mpg, aes(x = displ, y = hwy)) + 
   geom_point(color = "blue")
@@ -51,12 +67,19 @@ ggplot(mpg) +
 
 # Create a scatterplot of hwy vs. displ where the points are pink filled in triangles.
 
+mpg %>%
+  ggplot(aes(x = hwy, y = displ)) +
+  geom_point(fill = "pink", shape = 24, size = 3)
+
 # Why did the following code not result in a plot with blue points?
   # 
-  # ggplot(mpg) + 
-  # geom_point(aes(x = displ, y = hwy, color = "blue"))
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy), color = "blue")
 
 # What does the stroke aesthetic do? What shapes does it work with? (Hint: use ?geom_point)
+mpg %>%
+  ggplot(aes(x = hwy, y = displ)) +
+  geom_point(fill = "pink", shape = 24, size = 3, color = "steelblue4", stroke = 2)
 
 # What happens if you map an aesthetic to something other than a variable name, like aes(color = displ < 5)? Note, you’ll also need to specify x and y.
 
@@ -64,7 +87,8 @@ ggplot(mpg) +
 
 # geoms ----
 ggplot(mpg, aes(x = displ, y = hwy)) + 
-  geom_point()
+  geom_point() + 
+  geom_smooth()
 
 ggplot(mpg, aes(x = displ, y = hwy)) + 
   geom_smooth()
@@ -88,7 +112,6 @@ ggplot(mpg, aes(x = displ, y = hwy, linetype = drv)) +
 ggplot(mpg, aes(x = displ, y = hwy, color = drv)) + 
   geom_point() +
   geom_smooth(aes(linetype = drv))
-
 
 
 # Left
@@ -135,14 +158,28 @@ ggplot(mpg, aes(x = hwy)) +
 # ridges ----
 
 library(ggridges)
-
-ggplot(mpg, aes(x = hwy, y = drv, fill = drv, color = drv)) +
-  geom_density_ridges(alpha = 0.5, show.legend = FALSE)
-
+mpg
+ggplot(mpg, aes(x = hwy, y = class, fill = class, color = class)) +
+  geom_density_ridges(scale=0.8, alpha = 0.5, show.legend = FALSE)
 
 # exercises 10.3.1 ---- 
 
 # What geom would you use to draw a line chart? A boxplot? A histogram? An area chart?
+mpg
+mpg %>%
+  ggplot(aes(y = displ, x = drv, fill = hwy)) +
+  geom_area()
+
+df <- data.frame(
+  g = c("a", "a", "a", "b", "b", "b"),
+  x = c(1, 3, 5, 2, 4, 6),
+  y = c(2, 5, 1, 3, 6, 7)
+)
+
+df
+a <- ggplot(df, aes(x, y, fill = g)) +
+  geom_area()
+a
 
 # ----
 
