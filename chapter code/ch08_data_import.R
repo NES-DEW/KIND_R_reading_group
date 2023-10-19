@@ -1,6 +1,16 @@
 # knitr::purl("https://raw.githubusercontent.com/hadley/r4ds/main/data-import.qmd", documentation=0, output="chapter code/ch08_data_import.R")
 
+# things to talk about
+
+## NAs with read_csv
+
 library(tidyverse)
+
+students <- read_csv("https://pos.it/r4ds-students-csv") |>
+  janitor::clean_names()
+
+
+st
 
 # getting started ----
 read_lines("data/students.csv") |> 
@@ -9,14 +19,34 @@ read_lines("data/students.csv") |>
 read_csv("data/students.csv") |> # reading from local copy
   knitr::kable()
 
+students |>
+  select(`Student ID`)
+
 students <- read_csv("data/students.csv") 
 
 ## students <- read_csv("https://pos.it/r4ds-students-csv") - to read from web
 
-students
+c("1","2","5",NA) |> replace_na("SPUDGE")
+
+students|>
+  replace_na("thing")
+
+sum_groups <- function(x) {
+  if(all(is.na(x))) {
+    NA
+  } else {
+    sum(x, na.rm = TRUE)
+  }
+}
+
+c(NA, NA) |>
+  sum(na.rm = TRUE)
+
+na_vals <- c("N/A", "", "Barclay Lynn")
 
 # missing data ----
-students2 <- read_csv("data/students.csv", na = c("N/A", "")) # deciding what we want to code as proper NAs (NTM)
+read_csv("https://pos.it/r4ds-students-csv", 
+         na = na_vals) # deciding what we want to code as proper NAs (NTM)
 
 # comparison 
 waldo::compare(students, students2)
@@ -87,7 +117,7 @@ read_csv( # comment
 read_csv( # make up col names
   "1,2,3
   4,5,6",
-  col_names = FALSE
+  col_names = T
 )
 
 read_csv( # supply col names
@@ -99,9 +129,15 @@ read_csv( # supply col names
 ## 8.2.4 Exercises ----
 
 # What function would you use to read a file where fields were separated with “|”?
-  
+
+read_delim("col1|col2|col3
+           4|5|6",
+           delim = "|")
+
+
 # Apart from file, skip, and comment, what other arguments do read_csv() and read_tsv() have in common?
-  
+
+read_fwf(data, fwf_widths(c(20, 10, 12))
 # What are the most important arguments to read_fwf()?
   
 # Sometimes strings in a CSV file contain commas. To prevent them from causing problems, they need to be surrounded by a quoting character, like " or '. By default, read_csv() assumes that the quoting character will be ". To read the following text into a data frame, what argument to read_csv() do you need to specify?
@@ -110,9 +146,17 @@ read_csv( # supply col names
 
 #Identify what is wrong with each of the following inline CSV files. What happens when you run the code?
   
-read_csv("a,b\n1,2,3\n4,5,6")
-read_csv("a,b,c\n1,2\n1,2,3,4")
-read_csv("a,b\n\"1")
+read_csv("a,b,
+         1,2,3
+         4,5,6")
+
+
+read_csv("a,b,c\n1,2,1\n2,3,4")
+
+
+read_csv("a,b
+         1,2")
+
 read_csv("a,b\n1,2\na,b")
 read_csv("a;b\n1;3")
 
@@ -127,6 +171,23 @@ annoying <- tibble(
   `1` = 1:10,
   `2` = `1` * 2 + rnorm(length(`1`))
 )
+annoying$"1"
+annoying[["1"]]
+
+annoying |>
+  pull(`1`)
+
+annoying |>
+  ggplot() +
+  geom_point(aes(x = 1, y = 2))
+
+annoying |>
+  ggplot() +
+  geom_point(aes(x = "1", y = "2"))
+
+annoying |>
+  ggplot() +
+  geom_point(aes(x = `1`, y = `2`))
 
 # 8.3 Controlling column types ----
 
@@ -191,8 +252,12 @@ write_rds(students, "students.rds")
 read_rds("students.rds")
 
 library(arrow)
+
 write_parquet(students, "students.parquet")
-read_parquet("students.parquet")
+
+read_parquet("students.parquet") |>
+  filter(student_id == 1)
+
 ## #> # A tibble: 6 × 5
 ## #>   student_id full_name        favourite_food     meal_plan             age
 ## #>        <dbl> <chr>            <chr>              <fct>               <dbl>
