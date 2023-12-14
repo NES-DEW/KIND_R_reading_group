@@ -1,7 +1,6 @@
 # knitr::purl("https://raw.githubusercontent.com/hadley/r4ds/main/databases.qmd")
 
 # introduction ----
-
 library(DBI)
 library(dbplyr)
 library(tidyverse)
@@ -24,13 +23,14 @@ library(tidyverse)
 
 # use duckdb to create a temp in-process DB, and DBI to connect to it
 con <- DBI::dbConnect(duckdb::duckdb())
-
+con
 # or the proper "store the db in the /duckdb dir" version
 ## con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "duckdb")
 
 # write arbitrary data to duckdb - note there are more efficient direct routes like duckdb_read_csv() that miss out the data loading into R step
 dbWriteTable(con, "mpg", ggplot2::mpg)
 dbWriteTable(con, "diamonds", ggplot2::diamonds)
+dbWriteTable(con, "thing", tibble(a = 1:100))
 
 # list our tables
 dbListTables(con)
@@ -54,12 +54,14 @@ as_tibble(dbGetQuery(con, sql))
 
 # create a tbl object to represent a db table
 diamonds_db <- tbl(con, from = "diamonds")
+
 diamonds_db
 
 # then do (lazy) dplyr
-big_diamonds_db <- diamonds_db |> 
-  filter(price > 15000) |> 
-  select(carat:clarity, price) 
+diamonds_db |> 
+  # filter(price > 15000) |> 
+  select(carat:clarity, price)|>
+  show_query()
 
 big_diamonds_db # note metadata in preview
 
@@ -93,8 +95,11 @@ options(dplyr.strict_sql = TRUE) # force errors if translation is unknown
 # order of execution is FROM  / WHERE / GROUP BY / SELECT   / ORDER BY
 
 # love the use of show_query() as an SQL teaching tool
-flights |> show_query()
-planes |> show_query()
+flights |> 
+  show_query()
+
+planes |>
+  show_query()
 
 # WHERE == filter()
 # ORDER BY == arrange()
@@ -112,12 +117,14 @@ flights |>
 # SELECT == select(), mutate(), rename(), relocate(), summarise()
 # yikes!
 # select() version - supply a column name
+
 planes |> 
-  select(tailnum, type, manufacturer, model, year) |> 
+  select(type, tailnum, manufacturer, model, year) |> 
   show_query()
 
 # SELECT x AS y == rename() - aliasing
 # !! old = new !!
+
 planes |> 
   select(tailnum, type, manufacturer, model, year) |> 
   rename(year_built = year) |> 
@@ -132,9 +139,8 @@ planes |>
 
 # SELECT with calcs == mutate()
 flights |> 
-  mutate(
-    speed = distance / (air_time / 60)
-  ) |> 
+  mutate(speed = distance / (air_time / 60)) |> 
+  relocate(last_col()) |>
   show_query()
 
 # GROUP BY == group_by(), with calcs in SELECT
@@ -246,9 +252,13 @@ flights |>
 # OVER for window function to replicate grouped mutate
 flights |> 
   group_by(year, month, day) |>  
-  mutate_query(
-    mean = mean(arr_delay, na.rm = TRUE),
-  )
+  mutate_query(mean = mean(arr_delay, na.rm = TRUE),  ) |>
+  collect() |>
+  distinct()
+
+nycflights13::flights |>
+  group_by(year, month, day) |>
+  summarise(mean = mean(arr_delay, na.rm=T))
 
 # similar window function
 flights |> 
